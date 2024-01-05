@@ -1,8 +1,8 @@
 import { React, useState, useRef, useEffect } from 'react'
-import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import { app } from '../firebase';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice';
 
 export default function Profile() {
   const [formData, setFormData] = useState({});
@@ -12,6 +12,8 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [fileProgress, setFileProgress] = useState(0);
   const [fileError, setFileError] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (file) {
@@ -47,11 +49,31 @@ export default function Profile() {
   }
 
   const handleChange = (e) => {
-
+    setFormData(
+      {
+        ...formData,
+        [e.target.id]: e.target.value
+      }
+    );
   }
 
-  const handleSubmit = (e) => {
-    
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(updateUserStart());
+    const res = await fetch("/api/user/update/" + currentUser._id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+    if (data.success === false) {
+      dispatch(updateUserFailure(data.message));
+      return;
+    }
+    dispatch(updateUserSuccess(data));
   }
 
   return (
@@ -63,6 +85,7 @@ export default function Profile() {
           type="file"
           ref={fileRef}
           accept="image/*"
+          id="profilePicture"
           onChange={(e) => setFile(e.target.files[0])}  
         />
         <img
@@ -77,8 +100,22 @@ export default function Profile() {
           {!fileError && fileProgress == 100 && <span className='text-green-700'>Image successfully uploaded!</span>}
         </p>
         
-        <input type="text" placeholder='Username' className='border p-3 rounded-lg' id='username' onChange={handleChange}/>
-        <input type="text" placeholder='Email' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
+        <input
+          type="text"
+          placeholder='Username'
+          className='border p-3 rounded-lg'
+          id='username'
+          defaultValue={currentUser.username}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          placeholder='Email'
+          className='border p-3 rounded-lg'
+          id='email'
+          defaultValue={currentUser.email}
+          onChange={handleChange}
+        />
         <input type="password" placeholder='Password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button
           disabled={isLoading}
