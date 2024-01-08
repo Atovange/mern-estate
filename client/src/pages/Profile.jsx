@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import { app } from '../firebase';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutStart, signOutFailure, signOutSuccess } from '../redux/user/userSlice';
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const [formData, setFormData] = useState({});
@@ -144,9 +145,14 @@ export default function Profile() {
         <input type="password" placeholder='Password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button
           disabled={isLoading}
-          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-80 disabled:opacity-70 '>
+          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-80 disabled:opacity-70'>
             {isLoading ? "Loading..." : "Update"}
         </button>
+        <Link
+          to="/create-listing"
+          className='bg-green-700 text-white p-3 rounded-lg uppercase hover:opacity-80 disabled:opacity-70 text-center'>
+          Create Listing
+        </Link>
       </form>
       {error && <p className='text-red-500 mt-5'>{error}</p>}
       <div className='flex justify-between mt-5'>
