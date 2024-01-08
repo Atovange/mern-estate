@@ -7,10 +7,10 @@ import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const { isLoading, error } = useSelector((state) => state.user);
+  const { isLoading, error } = useSelector(state => state.user);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData(
@@ -40,10 +40,7 @@ export default function SignIn() {
     }
     dispatch(signInSuccess(data));
     navigate("/profile");
-    console.log(data);
   }
-
-  console.log(formData);
 
   return (
     <div className='p-3 max-w-lg mx-auto'>

@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import {Link, useNavigate} from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 
 import OAuth from '../components/OAuth';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error } = useSelector((state) => state.user);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,7 +23,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    dispatch(signInStart());
     const res = await fetch("/api/auth/signup",
       {
         method: "POST",
@@ -33,17 +35,28 @@ export default function SignUp() {
     );
     const data = await res.json();
     if(data.success === false) {
-      setError(data.message);
-      setIsLoading(false);
+      dispatch(signInFailure(data.message));
       return;
     }
-    setIsLoading(false);
-    setError(null);
-    navigate("/sign-in");
+    const resSignIn = await fetch("/api/auth/signin",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      }
+    );
+    const dataSignIn = await resSignIn.json();
+    if(dataSignIn.success === false) {
+      dispatch(signInFailure(data.message));
+      return;
+    }
+    dispatch(signInSuccess(dataSignIn));
+    navigate("/profile");
     console.log(data);
+    console.log(dataSignIn);
   }
-
-  console.log(formData);
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
