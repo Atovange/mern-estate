@@ -49,9 +49,51 @@ export const getListing = async (req, res, next) => {
     }
 }
 
+const parseQueryBoolean = (query) => {
+    switch (query) {
+        case "false": return false;
+        case "true": return true;
+        case undefined: return false;
+        default: return false;
+    }
+}
+
 export const getListings = async (req, res, next) => {
     try {
-        const limit = parseInt(req.query.limit || 10);
+        const limit = parseInt(req.query.limit) || 9;
+        const skip = parseInt(req.query.skip) || 0;
+
+        const offer = parseQueryBoolean(req.query.offer);
+        const furnished = parseQueryBoolean(req.query.furnished);
+        const parking = parseQueryBoolean(req.query.parking);
+        const rent = parseQueryBoolean(req.query.rent);
+        const sell = parseQueryBoolean(req.query.sell);
+
+        const searchTerm = req.query.searchTerm || "";
+
+        const sort = req.query.sort || "createdAt";
+
+        const order = req.query.order || "desc";
+        
+        const query = {
+            name: { $regex: searchTerm, $options: "i" },
+            offer: offer ? true : { $in: [true, false] },
+            furnished: furnished ? true : { $in: [true, false] },
+            parking: parking ? true : { $in: [true, false] }
+        };
+
+        if (rent && sell) {
+            query.type = { $in: ["rent", "sell"] };
+        } else if (rent || sell) {
+            query.type = rent ? "rent" : "sell";
+        } else {
+            query.type = { $in: ["rent", "sell"] };
+        }
+
+        const listings = await Listing.find(query)
+            .limit(limit)
+            .skip(skip)
+            .sort({ [sort]: order });
 
         return res.status(200).json(listings);
     } catch (error) {
