@@ -133,7 +133,7 @@ export default function Profile() {
         <h2 className='font-semibold hover:underline truncate flex-1'>{listing.name}</h2>
       </Link>
       <div className='flex flex-col gap-2'>
-        <button className='text-green-700 uppercase border border-green-700 p-3 rounded'>Edit</button>
+        <Link to={"/edit-listing/" + listing._id} className='text-center text-green-700 uppercase border border-green-700 p-3 rounded'>Edit</Link>
         <button onClick={() => handleListingDelete(listing._id)} className='text-red-700 uppercase border border-red-700 p-3 rounded'>Delete</button>
       </div>
     </div>
