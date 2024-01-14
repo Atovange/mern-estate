@@ -36,7 +36,7 @@ export default function CreateListing() {
 	useEffect(() => {
 		const fetchListing = async () => {
 			setIsFetchingListing(true);
-			const res = await fetch("/api/listing/" + id);
+			const res = await fetch("/api/listings/" + id);
 			const data = await res.json();
 			setIsFetchingListing(false);
 			if (data.success == false) {
@@ -132,7 +132,7 @@ export default function CreateListing() {
 		setIsLoading(true);
 		let res = null;
 		if (id) {
-			res = await fetch("/api/listing/update/" + id, {
+			res = await fetch("/api/listings/update/" + id, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json"
@@ -143,7 +143,7 @@ export default function CreateListing() {
 				})
 			});
 		} else {
-			res = await fetch("/api/listing/create", {
+			res = await fetch("/api/listings/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"

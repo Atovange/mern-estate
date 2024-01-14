@@ -29,7 +29,7 @@ export default function Listing() {
 
     useEffect(() => {
 		const fetchListing = async () => {
-			const res = await fetch("/api/listing/" + params.listingId);
+			const res = await fetch("/api/listings/" + params.listingId);
 			const data = await res.json();
 			if (data.success == false) {
 				console.log(data.message);

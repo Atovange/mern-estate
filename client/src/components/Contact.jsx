@@ -7,7 +7,7 @@ export default function Contact({listing}) {
 
     useEffect(() => {
         const fetchLandlord = async () => {
-            const res = await fetch("/api/user/" + listing.userRef);
+            const res = await fetch("/api/users/" + listing.userRef);
             const data = await res.json();
             if (data.success == false) {
                 console.log(data.message);

@@ -64,7 +64,7 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateUserStart());
-    const res = await fetch("/api/user/update/" + currentUser._id, {
+    const res = await fetch("/api/users/update/" + currentUser._id, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -82,7 +82,7 @@ export default function Profile() {
 
   const handleDeleteAccount = async (e) => {
     dispatch(deleteUserStart());
-    const res = await fetch("/api/user/delete/" + currentUser._id, {
+    const res = await fetch("/api/users/delete/" + currentUser._id, {
       method: "DELETE",
     });
     const data = await res.json();
@@ -105,7 +105,7 @@ export default function Profile() {
   }
 
   const handleShowListings = async (e) => {
-    const res = await fetch("/api/user/" + currentUser._id + "/listings");
+    const res = await fetch("/api/users/" + currentUser._id + "/listings");
     const data = await res.json();
     if (data.success === false) {
       return;
@@ -114,7 +114,7 @@ export default function Profile() {
   }
 
   const handleListingDelete = async(id) => {
-    const res = await fetch("/api/listing/delete/" + id, {
+    const res = await fetch("/api/listings/delete/" + id, {
       method: "DELETE",
     });
     const data = await res.json();
