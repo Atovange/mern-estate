@@ -113,18 +113,30 @@ export default function Profile() {
     setListings(data);
   }
 
+  const handleListingDelete = async(id) => {
+    const res = await fetch("/api/listing/delete/" + id, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    if (data.success === false) {
+      return;
+    }
+    setListings(prev => prev.filter(listing => listing._id != id));
+  }
+
   const listingsDivs = listings.map(listing => 
-    <Link
+    <div
       className='flex flex-row items-center gap-5 border px-3 rounded-lg justify-between'
-      key={listing._id}
-      to={"/listing/" + listing._id}>
-      <img src={listing.imageUrls[0]} alt="listing image" className='h-32 w-32 object-contain'/>
-      <h2 className='font-semibold hover:underline truncate flex-1'>{listing.name}</h2>
+      key={listing._id}>
+      <Link to={"/listing/" + listing._id} className='flex flex-row items-center gap-5'>
+        <img src={listing.imageUrls[0]} alt="listing image" className='h-32 w-32 object-contain'/>
+        <h2 className='font-semibold hover:underline truncate flex-1'>{listing.name}</h2>
+      </Link>
       <div className='flex flex-col gap-2'>
-        <Link to={"/listing/"} className='text-green-700 uppercase border border-green-700 p-3 rounded text-center'>Edit</Link>
-        <Link to={"/listing"} className='text-red-700 uppercase border border-red-700 p-3 rounded text-center'>Delete</Link>
+        <button className='text-green-700 uppercase border border-green-700 p-3 rounded'>Edit</button>
+        <button onClick={() => handleListingDelete(listing._id)} className='text-red-700 uppercase border border-red-700 p-3 rounded'>Delete</button>
       </div>
-    </Link>
+    </div>
   );
 
   return (
