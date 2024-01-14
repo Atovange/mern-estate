@@ -14,6 +14,8 @@ export default function Profile() {
   const [fileProgress, setFileProgress] = useState(0);
   const [fileError, setFileError] = useState(false);
 
+  const [listings, setListings] = useState([]);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -102,6 +104,29 @@ export default function Profile() {
     dispatch(signOutSuccess());
   }
 
+  const handleShowListings = async (e) => {
+    const res = await fetch("/api/user/" + currentUser._id + "/listings");
+    const data = await res.json();
+    if (data.success === false) {
+      return;
+    }
+    setListings(data);
+  }
+
+  const listingsDivs = listings.map(listing => 
+    <Link
+      className='flex flex-row items-center gap-5 border px-3 rounded-lg justify-between'
+      key={listing._id}
+      to={"/listing/" + listing._id}>
+      <img src={listing.imageUrls[0]} alt="listing image" className='h-32 w-32 object-contain'/>
+      <h2 className='font-semibold hover:underline truncate flex-1'>{listing.name}</h2>
+      <div className='flex flex-col gap-2'>
+        <Link to={"/listing/"} className='text-green-700 uppercase border border-green-700 p-3 rounded text-center'>Edit</Link>
+        <Link to={"/listing"} className='text-red-700 uppercase border border-red-700 p-3 rounded text-center'>Delete</Link>
+      </div>
+    </Link>
+  );
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>Profile</h1>
@@ -158,6 +183,14 @@ export default function Profile() {
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer' onClick={handleDeleteAccount}>Delete Account</span>
         <span className='text-red-700 cursor-pointer' onClick={handleSignOut}>Sign Out</span>
+      </div>
+      <button
+        onClick={handleShowListings}
+        className='text-green-700 w-full'>
+        Show Listings
+      </button>
+      <div className='flex flex-col gap-5 mt-5'>
+        {listingsDivs}
       </div>
     </div>
   )
