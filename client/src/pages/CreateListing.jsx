@@ -172,13 +172,10 @@ export default function CreateListing() {
 		</div>
 	);
 
-	if (isFetchingListing)
-		return "Loading..."
-
 	return (
 		<main className='p-3 max-w-4xl mx-auto'>
 			<h1 className='text-3xl text-center font-semibold my-7'>
-				{id ? "Update listing" : "Create a Listing"}
+				{isFetchingListing ? "Loading..." : (id ? "Update listing" : "Create a Listing")}
 			</h1>
 			<form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-5'>
 				<div className='flex flex-col gap-4 flex-1'>
