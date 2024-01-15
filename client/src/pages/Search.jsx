@@ -14,6 +14,7 @@ export default function Search() {
         order: "desc"
     });
     const [listings, setListings] = useState([]);
+    const [showMore, setShowMore] = useState(false);
 
     const navigate = useNavigate();
     
@@ -73,6 +74,16 @@ export default function Search() {
         }
         const searchQuery = urlParams.toString();
         navigate("/search?" + searchQuery);
+    }
+
+    const onShowMore = async (e) => {
+        const listingsAmount = listings.length;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set("skip", listingsAmount);
+        const searchQuery = urlParams.toString();
+        const res = await fetch("/api/listings?" + searchQuery);
+        const data = await res.json();
+        setListings([...listings, ...data]);
     }
 
     const listingsDivs = listings.map(listing => 
@@ -138,7 +149,9 @@ export default function Search() {
                 <div className='p-3 flex flex-wrap gap-8'>
                     {listings.length > 0 ? listingsDivs : "No listings found!"}
                 </div>
+                <button onClick={onShowMore} className='text-green-700 hover:underline p-7'>Show more</button>
             </div>
+            
         </div>
     )
 }

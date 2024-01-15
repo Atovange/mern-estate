@@ -60,7 +60,7 @@ const parseQueryBoolean = (query) => {
 
 export const getListings = async (req, res, next) => {
     try {
-        const limit = parseInt(req.query.limit) || 9;
+        const limit = parseInt(req.query.limit) || 4;
         const skip = parseInt(req.query.skip) || 0;
 
         const offer = parseQueryBoolean(req.query.offer);
