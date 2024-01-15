@@ -4,7 +4,7 @@ import SwiperCore from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
-import { Fa500Px, FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking, FaShare } from "react-icons/fa";
+import { FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking, FaShare } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import Contact from '../components/Contact';
 
@@ -80,7 +80,7 @@ export default function Listing() {
                         </p>
                         <ul className='text-green-900 font-semibold flex flex-wrap gap-5'>
                             <li className='flex items-center gap-2 whitespace-nowrap'><FaBed className='text-lg'/> {listing.bedrooms} Bedroom{listing.bedrooms > 1 && "s"}</li>
-                            <li className='flex items-center gap-2 whitespace-nowrap'><FaBath className='text-lg'/> {listing.bedrooms} Bathroom{listing.bedrooms > 1 && "s"}</li>
+                            <li className='flex items-center gap-2 whitespace-nowrap'><FaBath className='text-lg'/> {listing.bathrooms} Bathroom{listing.bathrooms > 1 && "s"}</li>
                             <li className='flex items-center gap-2 whitespace-nowrap'><FaParking className='text-lg'/> {listing.parking ? "Parking spot" : "No parking spot"}</li>
                             <li className='flex items-center gap-2 whitespace-nowrap'><FaChair className='text-lg'/> {listing.furnished ? "Furnished" : "Not furnished"}</li>
                         </ul>

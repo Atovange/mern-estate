@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import ListingCard from '../components/ListingCard';
 
 export default function Search() {
     const [searchParams, setSearchParams] = useState({
@@ -75,9 +76,7 @@ export default function Search() {
     }
 
     const listingsDivs = listings.map(listing => 
-        <div key={listing._id}>
-            {listing.name}
-        </div>
+        <ListingCard key={listing._id} listing={listing}/>
     );
 
     return (
@@ -136,8 +135,8 @@ export default function Search() {
             </div>
             <div className='flex flex-col'>
                 <h1 className='text-3xl font-semibold p-3 text-slate-700'>Listing results:</h1>
-                <div>
-                    {listingsDivs}
+                <div className='p-3 flex flex-wrap gap-8'>
+                    {listings.length > 0 ? listingsDivs : "No listings found!"}
                 </div>
             </div>
         </div>
